@@ -1,0 +1,167 @@
+from __future__ import division
+import re
+
+books = [{
+  "title": "Hunger Games",
+  "description": "In a not-too-distant future, the United States of America has collapsed, weakened by drought, fire, famine, and war, to be replaced by Panem, a country divided into the Capitol and 12 districts. Each year, two young representatives from each district are selected by lottery to participate in The Hunger Games. Part entertainment, part brutal intimidation of the subjugated districts, the televised games are broadcasted throughout Panem as the 24 participants are forced to eliminate their competitors, literally, with all citizens required to watch. When 16-year-old Katniss's young sister, Prim, is selected as the mining district's female representative, Katniss volunteers to take her place. She and her male counterpart, Peeta, the son of the town baker who seems to have all the fighting skills of a lump of bread dough, will be pitted against bigger, stronger representatives who have trained for this their whole lives. Collins's characters are completely realistic and sympathetic as they fight and form alliances and friendships in the face of overwhelming odds; the plot is tense, dramatic, and engrossing. This book will definitely resonate with the generation raised on reality shows like 'Survivor' and 'American Gladiator.' Book one of a planned trilogy."
+},
+{
+  "title": "Infinite Jest",
+  "description": "With its baroque subplots, zany political satire, morbid, cerebral humor and astonishing range of cultural references, Wallace's brilliant but somewhat bloated dirigible of a second novel (after The Broom in the System) will appeal to steadfast readers of Pynchon and Gaddis. But few others will have the stamina for it. Set in an absurd yet uncanny near-future, with a cast of hundreds and close to 400 footnotes, Wallace's story weaves between two surprisingly similar locales: Ennet House, a halfway-house in the Boston Suburbs, and the adjacent Enfield Tennis Academy. It is the 'Year of the Depend Adult Undergarment' (each calendar year is now subsidized by retail advertising); the U.S. and Canada have been subsumed by the Organization of North American Nations, unleashing a torrent of anti-O.N.A.N.ist terrorism by Quebecois separatists; drug problems are widespread; the Northeastern continent is a giant toxic waste dump; and CD-like 'entertainment cartridges' are the prevalent leisure activity. The novel hinges on the dysfunctional family of E.T.A.'s founder, optical-scientist-turned-cult-filmmaker Dr. James Incandenza (aka Himself), who took his life shortly after producing a mysterious film called Infinite Jest, which is supposedly so addictively entertaining as to bring about a total neural meltdown in its viewer. As Himself's estranged sons?professional football punter Orin, introverted tennis star Hal and deformed naif Mario?come to terms with his suicide and legacy, they and the residents of Ennet House become enmeshed in the machinations of the wheelchair-bound leader of a Quebecois separatist faction, who hopes to disseminate cartridges of Infinite Jest and thus shred the social fabric of O.N.A.N. With its hilarious riffs on themes like addiction, 12-step programs, technology and waste management (in all its scatological implications), this tome is highly engrossing?in small doses. Yet the nebulous, resolutionless ending serves to underscore Wallace's underlying failure to find a suitable novelistic shape for his ingenious and often outrageously funny material."
+}
+]
+
+genres = {
+    'action': [('fast paced', 7),('distant future',4),('fight', 6)],
+    'mystery': [('murder', 5), ('death', 8), ('explosive', 4)],
+    'sci-fi': [('future', 8), ('spaceship', 9)]
+}
+
+
+
+#print temp_score_list
+#print(genre[1]['mystery'])
+book_score = {}
+
+for book in books:
+    temp_score_list = {}
+    for genre in genres:
+        temp_score_list[genre] = []
+
+    temp_list = re.split(r' +|\.|,|-', book['description'])
+    #print(temp_list)
+    for genre in genres:
+        count = 0
+        assigned_score = []
+        for k,v in genres[genre]:
+            if k in book['description']:
+                assigned_score.append(v)
+                list_k = k.split()
+                for i in range(len(temp_list)):
+                    if len(list_k) > 1:
+                        flag = False
+                        if list_k[0] in temp_list[i]:
+                            flag = True
+                            for j in range(len(list_k)):
+                                if temp_list[i+j] == list_k[j]:
+                                    print('im inhere')
+                                    flag and True
+                                else:
+                                    flag = False
+                            if flag:
+                                count += 1
+                    else:
+                        if k in temp_list[i]:
+                            count += 1
+                            print(temp_list[i])
+        total_score = 0
+        for i in assigned_score:
+            total_score += i
+        if len(assigned_score) > 0:
+            average_score = total_score/len(assigned_score)
+        else:
+            average_score = 0
+        if average_score > 0:
+            #temp_score_list[genre].append(count)
+            temp_score_list[genre].append(average_score * count)
+        book_title = book['title']
+        book_score[book_title] = temp_score_list
+        #temp_score_list = {}
+
+        print(book_score)
+
+
+
+----------------------
+backup 2
+
+from __future__ import division
+import re
+import json
+
+print('Welcome \n')
+json_file_ = raw_input("Json file directory: ")
+
+with open(json_file_) as json_file:
+    books = json.load(json_file)
+
+print(books)
+
+
+csv = raw_input("csv file directory")
+
+
+"""books = [{
+  "title": "Hunger Games",
+  "description": "In a not-too-distant future, the United States of America has collapsed, weakened by drought, fire, famine, and war, to be replaced by Panem, a country divided into the Capitol and 12 districts. Each year, two young representatives from each district are selected by lottery to participate in The Hunger Games. Part entertainment, part brutal intimidation of the subjugated districts, the televised games are broadcasted throughout Panem as the 24 participants are forced to eliminate their competitors, literally, with all citizens required to watch. When 16-year-old Katniss's young sister, Prim, is selected as the mining district's female representative, Katniss volunteers to take her place. She and her male counterpart, Peeta, the son of the town baker who seems to have all the fighting skills of a lump of bread dough, will be pitted against bigger, stronger representatives who have trained for this their whole lives. Collins's characters are completely realistic and sympathetic as they fight and form alliances and friendships in the face of overwhelming odds; the plot is tense, dramatic, and engrossing. This book will definitely resonate with the generation raised on reality shows like 'Survivor' and 'American Gladiator.' Book one of a planned trilogy."
+},
+{
+  "title": "Infinite Jest",
+  "description": "With its baroque subplots, zany political satire, morbid, cerebral humor and astonishing range of cultural references, Wallace's brilliant but somewhat bloated dirigible of a second novel (after The Broom in the System) will appeal to steadfast readers of Pynchon and Gaddis. But few others will have the stamina for it. Set in an absurd yet uncanny near-future, with a cast of hundreds and close to 400 footnotes, Wallace's story weaves between two surprisingly similar locales: Ennet House, a halfway-house in the Boston Suburbs, and the adjacent Enfield Tennis Academy. It is the 'Year of the Depend Adult Undergarment' (each calendar year is now subsidized by retail advertising); the U.S. and Canada have been subsumed by the Organization of North American Nations, unleashing a torrent of anti-O.N.A.N.ist terrorism by Quebecois separatists; drug problems are widespread; the Northeastern continent is a giant toxic waste dump; and CD-like 'entertainment cartridges' are the prevalent leisure activity. The novel hinges on the dysfunctional family of E.T.A.'s founder, optical-scientist-turned-cult-filmmaker Dr. James Incandenza (aka Himself), who took his life shortly after producing a mysterious film called Infinite Jest, which is supposedly so addictively entertaining as to bring about a total neural meltdown in its viewer. As Himself's estranged sons?professional football punter Orin, introverted tennis star Hal and deformed naif Mario?come to terms with his suicide and legacy, they and the residents of Ennet House become enmeshed in the machinations of the wheelchair-bound leader of a Quebecois separatist faction, who hopes to disseminate cartridges of Infinite Jest and thus shred the social fabric of O.N.A.N. With its hilarious riffs on themes like addiction, 12-step programs, technology and waste management (in all its scatological implications), this tome is highly engrossing?in small doses. Yet the nebulous, resolutionless ending serves to underscore Wallace's underlying failure to find a suitable novelistic shape for his ingenious and often outrageously funny material."
+}
+]
+"""
+
+genres = {
+    'action': [('fast paced', 7),('distant future',4),('fight', 6)],
+    'mystery': [('murder', 5), ('death', 8), ('explosive', 4)],
+    'sci-fi': [('future', 8), ('spaceship', 9)]
+}
+
+
+
+#print temp_score_list
+#print(genre[1]['mystery'])
+def score_checker():
+    book_score = {}
+
+    for book in books:
+        temp_score_list = {}
+        for genre in genres:
+            temp_score_list[genre] = []
+
+        temp_list = re.split(r'u\'| +|\.|,|-', book['description'])
+        #print(temp_list)
+        for genre in genres:
+            count = 0
+            assigned_score = []
+            for k,v in genres[genre]:
+                if k in book['description']:
+                    assigned_score.append(v)
+                    list_k = k.split()
+                    for i in range(len(temp_list)):
+                        if len(list_k) > 1:
+                            flag = False
+                            if list_k[0] in temp_list[i]:
+                                flag = True
+                                for j in range(len(list_k)):
+                                    if temp_list[i+j] == list_k[j]:
+                                        print('im inhere')
+                                        flag and True
+                                    else:
+                                        flag = False
+                                if flag:
+                                    count += 1
+                        else:
+                            if k in temp_list[i]:
+                                count += 1
+                                print(temp_list[i])
+            total_score = 0
+            for i in assigned_score:
+                total_score += i
+            if len(assigned_score) > 0:
+                average_score = total_score/len(assigned_score)
+            else:
+                average_score = 0
+            if average_score > 0:
+                #temp_score_list[genre].append(count)
+                temp_score_list[genre].append(average_score * count)
+            book_title = book['title']
+            book_score[book_title] = temp_score_list
+            #temp_score_list = {}
+
+            print(book_score)
+    for i in book_score:
+        print i
+
+score_checker()
